@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*{
+  font-family: Outfit;
+}
+.active hr{
+  @apply block
+}
+
+.dropdown-arrow, .dropdown-arrow2 {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+
+li:hover .dropdown-arrow,
+.profile-container:hover .dropdown-arrow2 {
+  opacity: 0.2;
+}
+
+.dropdown-content {
+  display: inline-block;
+  position: relative;
+}
