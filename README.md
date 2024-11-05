@@ -8,7 +8,7 @@
 ### **Features**
 - **User Authentication**: Secure sign-up and log-in using Firebase Authentication.
 - **Food Logging**: Users can log their meals, with CRUD functionality to add, edit, and delete entries.
-- **Nutrition Tracking**: Integrated with the Nutritionix API to provide real-time nutritional data (calories, macronutrients).
+- **Nutrition Tracking**: Integrated with the Edamam API to provide real-time nutritional data (calories, macronutrients).
 - **Fasting Timer**: A built-in fasting timer to help users manage intermittent fasting, complete with reminders and motivational quotes.
 - **Recipe Sharing**: Users can share and discover new recipes.
 - **Weight Tracker**: Users can log and monitor their weight over time with visual progress charts.
@@ -21,7 +21,7 @@
 - **Front-End**: React.js (using Vite)
 - **Back-End**: Firebase (Firestore, Firebase Authentication)
 - **UI Design**: Tailwind CSS
-- **External API**: Nutritionix API (for retrieving nutritional data)
+- **External API**: Edamam API (for retrieving nutritional data)
 - **Data Visualization**: Chart.js (for weight and nutrition tracking charts)
 - **Hosting**: Firebase Hosting
 
@@ -50,19 +50,27 @@
      VITE_FIREBASE_PROJECT_ID=your_project_id
      ```
 
-4. **Run the App**:
+4. **Configure Edamam API**:
+   - Sign up for an Edamam API key at [Edamam Developer](https://developer.edamam.com/).
+   - Add your Edamam credentials to the `.env` file:
+     ```bash
+     VITE_EDAMAM_APP_ID=your_app_id
+     VITE_EDAMAM_APP_KEY=your_app_key
+     ```
+
+5. **Run the App**:
     ```bash
     npm run dev
     ```
 
-5. **Access the App**:
+6. **Access the App**:
    - The app should now be running locally at `http://localhost:3000`.
 
 ---
 
 ### **Usage**
 - **Sign up** or **log in** to create a user profile.
-- Start **logging meals** and see the nutrition breakdown via the Nutritionix API.
+- Start **logging meals** and see the nutrition breakdown via the Edamam API.
 - Use the **fasting timer** to manage intermittent fasting, and track weight over time with the **weight tracker**.
 - Share recipes, **message friends**, and set personalized fitness goals in your **profile**.
 
