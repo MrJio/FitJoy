@@ -1,9 +1,12 @@
 // eslint-disable-next-line no-unused-vars
 import React from 'react';
-import AuthDetails from '../components/authDetails';
 import { assets } from '../assets/assets';
+import { useAuth } from '../context/AuthContext';
 
 const UserProfile = () => {
+  const { currentUser } = useAuth();
+  const username = currentUser?.email ? currentUser.email.split('@')[0] : '';
+
   return (
     <div className="profile-page">
       {/* Profile Header Section */}
@@ -14,14 +17,11 @@ const UserProfile = () => {
           alt="Profile" 
           className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-4 border-white mb-4"
         />
-        
-        {/* Auth Details */}
-        <AuthDetails />
 
         {/* User Basic Info */}
         <div className="text-center mt-2">
-          <h2 className="text-xl sm:text-2xl font-semibold">Jassa Jas</h2>
-          <p className="text-gray-600 text-sm sm:text-base">New York, USA</p>
+          <h2 className="text-xl sm:text-2xl font-semibold">{username}</h2>
+          <p className="text-gray-600 text-sm sm:text-base">Maryland, USA</p>
         </div>
 
         {/* Follow Stats */}
@@ -46,7 +46,6 @@ const UserProfile = () => {
       <div className="photo-gallery mt-6 px-4 sm:px-8 max-w-4xl mx-auto">
         <h2 className="text-xl sm:text-2xl font-semibold mb-4 text-center">Posts</h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-          {/* Replace these with real image URLs or paths */}
           <img src={assets.ph} alt="photo1" className="w-full h-32 sm:h-40 object-cover rounded"/>
           <img src={assets.ph} alt="photo2" className="w-full h-32 sm:h-40 object-cover rounded"/>
           <img src={assets.ph} alt="photo3" className="w-full h-32 sm:h-40 object-cover rounded"/>

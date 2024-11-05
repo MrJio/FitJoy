@@ -58,12 +58,12 @@ const Navbar = () => {
     const isFitnessActive = location.pathname.includes('/bmi-calculator') || location.pathname.includes('/workouts');
 
     return (
-        <div className='flex items-center justify-between text-sm py-4 mb-5 mx-10'>
+        <div className='flex items-center justify-between text-sm py-4 mb-5 mx-10 z-50 relative'>
             {/* Logo */}
             <img onClick={() => navigate('/home')} className='w-20 cursor-pointer' src={assets.logo2} alt="nav_logo"/>
 
             {/* Main Navigation (centered on larger screens) */}
-            <ul className={`flex-col ${isMenuOpen ? 'flex' : 'hidden'} md:flex md:flex-row md:items-center md:gap-8 font-medium bg-white md:bg-transparent w-full md:w-auto absolute md:static top-16 left-0 right-0 z-10 shadow-lg md:shadow-none rounded-lg md:rounded-none p-4 md:p-0 md:justify-center`}>
+            <ul className={`flex-col ${isMenuOpen ? 'flex' : 'hidden'} md:flex md:flex-row md:items-center md:gap-8 font-medium bg-white md:bg-transparent w-full md:w-auto absolute md:static top-16 left-0 right-0 z-50 shadow-lg md:shadow-none rounded-lg md:rounded-none p-4 md:p-0 md:justify-center`}>
                 
                 {/* Home */}
                 <NavLink to='/home' className={({ isActive }) => (isActive ? 'active' : '')} onClick={handleLinkClick}>
@@ -77,11 +77,11 @@ const Navbar = () => {
                         <span className="ml-2 md:inline hidden dropdown-arrow">{isNutritionOpen ? '▲' : '▼'}</span>
                     </div>
                     {isNutritionOpen && (
-                        <ul className='md:absolute md:left-0 md:top-full bg-white shadow-lg rounded-xl mt-2 md:mt-0 md:bg-white flex flex-col space-y-2 ml-4 p-2 md:ml-0'>
+                        <ul className='md:absolute md:left-0 md:top-full bg-white shadow-lg rounded-xl mt-2 md:mt-0 md:bg-white flex flex-col space-y-2 ml-4 p-2 md:ml-0 z-50'>
                             <NavLink to='/FoodLogger' className={({ isActive }) => (isActive ? 'active' : '')} onClick={handleLinkClick}>
                                 <li className='py-2 px-2 hover:bg-gray-200 rounded-xl text-center md:text-left'>Food Logger</li>
                             </NavLink>
-                            <NavLink to='/recipes' className={({ isActive }) => (isActive ? 'active' : '')} onClick={handleLinkClick}>
+                            <NavLink to='/FoodLogger' className={({ isActive }) => (isActive ? 'active' : '')} onClick={handleLinkClick}>
                                 <li className='py-2 px-2 hover:bg-gray-200 rounded-xl text-center md:text-left'>Recipes</li>
                             </NavLink>
                         </ul>
@@ -95,11 +95,11 @@ const Navbar = () => {
                         <span className="ml-2 md:inline hidden dropdown-arrow">{isFitnessOpen ? '▲' : '▼'}</span>
                     </div>
                     {isFitnessOpen && (
-                        <ul className='md:absolute md:right-0 md:top-full bg-white shadow-lg rounded-xl mt-2 md:mt-0 md:bg-white flex flex-col space-y-2 ml-4 p-2 md:ml-0'>
+                        <ul className='md:absolute md:right-0 md:top-full bg-white shadow-lg rounded-xl mt-2 md:mt-0 md:bg-white flex flex-col space-y-2 ml-4 p-2 md:ml-0 z-50'>
                             <NavLink to='/CalorieCalculator' className={({ isActive }) => (isActive ? 'active' : '')} onClick={handleLinkClick}>
                                 <li className='py-2 px-2 hover:bg-gray-200 rounded-xl text-center md:text-left'>Calorie Calculator</li>
                             </NavLink>
-                            <NavLink to='/workouts' className={({ isActive }) => (isActive ? 'active' : '')} onClick={handleLinkClick}>
+                            <NavLink to='/CalorieCalculator' className={({ isActive }) => (isActive ? 'active' : '')} onClick={handleLinkClick}>
                                 <li className='py-2 px-2 hover:bg-gray-200 rounded-xl text-center md:text-left'>Workouts</li>
                             </NavLink>
                         </ul>
@@ -118,7 +118,7 @@ const Navbar = () => {
                 <div className='relative cursor-pointer' onClick={toggleProfile}>
                     <FontAwesomeIcon icon={faCircleUser} size="2x" style={{ color: "#232323" }} />
                     {isProfileOpen && (
-                        <ul className='absolute right-0 top-full bg-white shadow-lg rounded mt-2 p-2'>
+                        <ul className='absolute right-0 top-full bg-white shadow-lg rounded mt-2 p-2 z-50'>
                             <li onClick={() => { navigate('/user-profile'); handleLinkClick(); }} className='py-2 px-4 hover:bg-gray-200 rounded-xl'>My Profile</li>
                             <li onClick={() => { navigate('/'); handleLinkClick(); }} className='py-2 px-4 hover:bg-gray-200 rounded-xl'>Friends</li>
                             <li onClick={() => { userSignOut(); handleLinkClick(); }} className='py-2 px-4 hover:bg-gray-200 rounded-xl'>Logout</li>

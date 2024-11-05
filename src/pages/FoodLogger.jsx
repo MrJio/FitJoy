@@ -4,8 +4,10 @@ import { db } from '../firebase';
 import { doc, setDoc, getDoc, onSnapshot } from 'firebase/firestore';
 import { useAuth } from '../context/AuthContext';
 import FoodSearchBar from '../components/FoodSearchBar';
+import { useNavigate } from 'react-router-dom';
 
 const FoodLogger = () => {
+  const navigate = useNavigate();
   const { currentUser } = useAuth();
   const [showModal, setShowModal] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -63,7 +65,7 @@ const FoodLogger = () => {
     const updatedFoodItems = { ...foodItems, [category]: updatedCategoryItems };
 
     setFoodItems(updatedFoodItems);
-    
+
     const updatedTotals = {
       calories: totals.calories - itemToRemove.calories,
       carbs: totals.carbs - itemToRemove.carbs,
@@ -168,94 +170,102 @@ const FoodLogger = () => {
     return () => unsubscribe();
   }, [currentUser]);
 
+  // Check if macros are set
+  const macrosSet = userMacros.calories > 0;
+
   return (
-    <div className="flex flex-col items-center p-6">
+    <div className="flex flex-col items-center p-6 relative">
       <h1 className="text-2xl font-bold mb-4">Your Food Diary</h1>
 
-      <div className="w-full max-w-md bg-white shadow-md rounded-lg p-4 mb-6">
-        <h2 className="text-lg font-semibold text-center">Macros Left for Today</h2>
-        <table className="w-full text-center mt-4">
-          <thead>
-            <tr>
-              <th className="p-2">Calories</th>
-              <th className="p-2">Carbs</th>
-              <th className="p-2">Fat</th>
-              <th className="p-2">Protein</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr className="text-green-600 font-semibold">
-              <td>{Math.max((userMacros.calories || 0) - totals.calories, 0)}</td>
-              <td>{Math.max((userMacros.carbs || 0) - totals.carbs, 0)}</td>
-              <td>{Math.max((userMacros.fat || 0) - totals.fat, 0)}</td>
-              <td>{Math.max((userMacros.protein || 0) - totals.protein, 0)}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      {!macrosSet && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-white bg-opacity-75 z-10">
+          <p className="text-sm italic mb-2 text-center">**You need to calculate macros before using this feature**</p>
+          <button className="px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold" onClick={() => navigate('/CalorieCalculator')}>
+            Calculate Macros
+          </button>
+        </div>
+      )}
 
-      <div className="w-full max-w-md bg-white shadow-md rounded-lg p-4">
-        {['Breakfast', 'Lunch', 'Dinner', 'Snacks'].map((category) => (
-          <div key={category} className="mb-4">
-            <h2 className="text-lg font-semibold">{category}</h2>
-            <button
-              className="text-blue-500 hover:text-blue-700"
-              onClick={() => openModal(category)}
-            >
-              Add Food
-            </button>
-            <ul className="mt-2 flex flex-wrap gap-2 ">
-              {foodItems[category].map((item, index) => (
-                <li 
-                  key={index} 
-                  className="inline-flex items-center py-2 bg-gray-100 text-left rounded-2xl min-w-[250px]"
-                >
-                  <div className="flex-grow ml-3">{item.name}</div>
-                  <span className="text-sm text-gray-500 mr-3 ml-4">{item.calories} kcal</span>
-                  <button
-                    onClick={() => duplicateFoodItem(category, item)}
-                    className="text-green-500 hover:text-green-700 mr-2"
-                  >
-                    +
-                  </button>
-                  <button
-                    onClick={() => deleteFoodItem(category, index)}
-                    className="text-red-200 hover:text-red-500 mr-3 mb-1"
-                  >
-                    x
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
+      <div className={`${!macrosSet ? 'blur-sm' : ''} w-full max-w-md`}>
+        <div className="w-full bg-white shadow-md rounded-lg p-4 mb-6">
+          <h2 className="text-lg font-semibold text-center">Macros Left for Today</h2>
+          <table className="w-full text-center mt-4">
+            <thead>
+              <tr>
+                <th className="p-2">Calories</th>
+                <th className="p-2">Carbs</th>
+                <th className="p-2">Fat</th>
+                <th className="p-2">Protein</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="text-green-600 font-semibold">
+                <td>{Math.max((userMacros.calories || 0) - totals.calories, 0)}</td>
+                <td>{Math.max((userMacros.carbs || 0) - totals.carbs, 0)}</td>
+                <td>{Math.max((userMacros.fat || 0) - totals.fat, 0)}</td>
+                <td>{Math.max((userMacros.protein || 0) - totals.protein, 0)}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
-      <div className="w-full max-w-md bg-white shadow-md rounded-lg p-4 mt-6">
-        <table className="w-full text-center">
-          <thead>
-            <tr>
-              <th className="p-2">Calories</th>
-              <th className="p-2">Carbs</th>
-              <th className="p-2">Fat</th>
-              <th className="p-2">Protein</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>{totals.calories}</td>
-              <td>{totals.carbs}</td>
-              <td>{totals.fat}</td>
-              <td>{totals.protein}</td>
-            </tr>
-            <tr className="font-semibold">
-              <td>{userMacros.calories || 0}</td>
-              <td>{userMacros.carbs || 0}</td>
-              <td>{userMacros.fat || 0}</td>
-              <td>{userMacros.protein || 0}</td>
-            </tr>
-          </tbody>
-        </table>
+        {/* Food categories and items */}
+        <div className="w-full max-w-md bg-white shadow-md rounded-lg p-4">
+          {['Breakfast', 'Lunch', 'Dinner', 'Snacks'].map((category) => (
+            <div key={category} className="mb-4">
+              <h2 className="text-lg font-semibold">{category}</h2>
+              <button
+                className="text-blue-500 hover:text-blue-700"
+                onClick={() => openModal(category)}
+              >
+                Add Food
+              </button>
+              <ul className="mt-2 flex flex-wrap gap-2">
+                {foodItems[category].map((item, index) => (
+                  <li key={index} className="inline-flex items-center py-2 bg-gray-100 text-left rounded-2xl min-w-[250px]">
+                    <div className="flex-grow ml-3">{item.name}</div>
+                    <span className="text-sm text-gray-500 mr-3 ml-4">{item.calories} kcal</span>
+                    <button
+                      onClick={() => duplicateFoodItem(category, item)}
+                      className="text-green-500 hover:text-green-700 mr-2"
+                    >
+                      +
+                    </button>
+                    <button
+                      onClick={() => deleteFoodItem(category, index)}
+                      className="text-red-500 hover:text-red-700 mr-3 mb-1"
+                    >
+                      x
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        {/* Total Macros Consumed Table */}
+        <div className="w-full max-w-md bg-white shadow-md rounded-lg p-4 mt-6">
+          <h2 className="text-lg font-semibold text-center">Total Macros Consumed</h2>
+          <table className="w-full text-center mt-4">
+            <thead>
+              <tr>
+                <th className="p-2">Calories</th>
+                <th className="p-2">Carbs</th>
+                <th className="p-2">Fat</th>
+                <th className="p-2">Protein</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="font-semibold">
+                <td>{totals.calories}</td>
+                <td>{totals.carbs}</td>
+                <td>{totals.fat}</td>
+                <td>{totals.protein}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {showModal && (
