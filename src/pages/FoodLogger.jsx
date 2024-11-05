@@ -54,7 +54,6 @@ const FoodLogger = () => {
     setTotals(updatedTotals);
 
     saveToFirebase(updatedFoodItems, updatedTotals);
-
     closeModal();
   };
 
@@ -70,6 +69,24 @@ const FoodLogger = () => {
       carbs: totals.carbs - itemToRemove.carbs,
       fat: totals.fat - itemToRemove.fat,
       protein: totals.protein - itemToRemove.protein,
+    };
+    setTotals(updatedTotals);
+
+    saveToFirebase(updatedFoodItems, updatedTotals);
+  };
+
+  const duplicateFoodItem = (category, item) => {
+    const updatedFoodItems = {
+      ...foodItems,
+      [category]: [...foodItems[category], item]
+    };
+    setFoodItems(updatedFoodItems);
+
+    const updatedTotals = {
+      calories: totals.calories + item.calories,
+      carbs: totals.carbs + item.carbs,
+      fat: totals.fat + item.fat,
+      protein: totals.protein + item.protein,
     };
     setTotals(updatedTotals);
 
@@ -195,6 +212,12 @@ const FoodLogger = () => {
                 >
                   <div className="flex-grow ml-3">{item.name}</div>
                   <span className="text-sm text-gray-500 mr-3 ml-4">{item.calories} kcal</span>
+                  <button
+                    onClick={() => duplicateFoodItem(category, item)}
+                    className="text-green-500 hover:text-green-700 mr-2"
+                  >
+                    +
+                  </button>
                   <button
                     onClick={() => deleteFoodItem(category, index)}
                     className="text-red-200 hover:text-red-500 mr-3 mb-1"
