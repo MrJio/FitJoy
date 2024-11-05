@@ -55,7 +55,7 @@ const Home = () => {
           <p className="text-sm italic mb-2 text-center">
             **You need to calculate macros before using this feature**
           </p>
-          <button className="px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold" onClick={() => navigate('/CalorieCalculator')}>
+          <button className="px-4 py-2 bg-primary text-white rounded-lg font-semibold" onClick={() => navigate('/CalorieCalculator')}>
             Calculate Macros
           </button>
         </div>
@@ -68,16 +68,15 @@ const Home = () => {
             <circle
               cx="50%"
               cy="50%"
-              r="90"  // Adjusted radius for larger circle
-              stroke="gray"
-              strokeWidth="12"  // Thicker stroke for visibility
+              r="90"
+              strokeWidth="12" 
               fill="transparent"
             />
             <circle
               cx="50%"
               cy="50%"
               r="90"
-              stroke="blue"
+              stroke="#00bbe5"
               strokeWidth="12"
               strokeDasharray="565" // Circumference of circle (2 * π * r)
               strokeDashoffset={565 - (565 * calculatePercentage(totals.calories, userMacros.calories)) / 100}
@@ -104,7 +103,7 @@ const Home = () => {
               </div>
               <div className="w-full h-6 bg-gray-200 rounded-full overflow-hidden"> {/* Increased height */}
                 <div
-                  className="h-full bg-blue-500 rounded-full"
+                  className="h-full bg-secondary rounded-full"
                   style={{ width: `${calculatePercentage(macro.total, macro.goal)}%` }}
                 />
               </div>

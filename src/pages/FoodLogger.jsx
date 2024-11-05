@@ -180,7 +180,7 @@ const FoodLogger = () => {
       {!macrosSet && (
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-white bg-opacity-75 z-10">
           <p className="text-sm italic mb-2 text-center">**You need to calculate macros before using this feature**</p>
-          <button className="px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold" onClick={() => navigate('/CalorieCalculator')}>
+          <button className="px-4 py-2 bg-secondary text-white rounded-lg font-semibold" onClick={() => navigate('/CalorieCalculator')}>
             Calculate Macros
           </button>
         </div>
@@ -199,7 +199,7 @@ const FoodLogger = () => {
               </tr>
             </thead>
             <tbody>
-              <tr className="text-green-600 font-semibold">
+              <tr className="text-primary font-semibold">
                 <td>{Math.max((userMacros.calories || 0) - totals.calories, 0)}</td>
                 <td>{Math.max((userMacros.carbs || 0) - totals.carbs, 0)}</td>
                 <td>{Math.max((userMacros.fat || 0) - totals.fat, 0)}</td>
@@ -215,7 +215,7 @@ const FoodLogger = () => {
             <div key={category} className="mb-4">
               <h2 className="text-lg font-semibold">{category}</h2>
               <button
-                className="text-blue-500 hover:text-blue-700"
+                className="text-primary hover:text-secondary"
                 onClick={() => openModal(category)}
               >
                 Add Food
@@ -227,7 +227,7 @@ const FoodLogger = () => {
                     <span className="text-sm text-gray-500 mr-3 ml-4">{item.calories} kcal</span>
                     <button
                       onClick={() => duplicateFoodItem(category, item)}
-                      className="text-green-500 hover:text-green-700 mr-2"
+                      className="text-gray-400 hover:text-primary mr-2"
                     >
                       +
                     </button>

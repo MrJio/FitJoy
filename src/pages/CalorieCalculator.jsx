@@ -165,104 +165,172 @@ const CalorieCalculator = () => {
     if (currentUser) fetchUserData();
   }, [currentUser]);
 
-  return (
-    <div className="max-w-md mx-auto p-8 border rounded-lg shadow-lg">
-      {!showResults ? (
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <h2 className="text-xl font-bold mb-4 text-center">Macro & Calorie Calculator</h2>
+// Import the `CalorieCalculator` component as usual
+
+return (
+  <div
+    className={`max-w-lg mx-auto p-10 rounded-2xl shadow-lg border border-gray-200 ${
+      showResults ? 'bg-primary' : 'bg-white'
+    }`}
+  >
+    {!showResults ? (
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <h2 className="text-2xl font-semibold text-gray-800 text-center">Macro & Calorie Calculator</h2>
+
+        {/* Age Input */}
+        <div>
+          <label className="block font-medium text-gray-700">Age</label>
+          <input
+            type="number"
+            value={age}
+            onChange={(e) => setAge(e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:border-primary focus:outline-none"
+            required
+          />
+        </div>
+
+        {/* Gender Input */}
+        <div>
+          <label className="block font-medium text-gray-700">Gender</label>
+          <select
+            value={gender}
+            onChange={(e) => setGender(e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:border-primary focus:outline-none"
+            required
+          >
+            <option value="">Select</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+        </div>
+
+        {/* Height Inputs */}
+        <div className="flex gap-4">
           <div>
-            <label className="block font-semibold">Age</label>
-            <input type="number" value={age} onChange={(e) => setAge(e.target.value)} className="w-full p-2 border rounded" required />
+            <label className="block font-medium text-gray-700">Height (Feet)</label>
+            <input
+              type="number"
+              value={heightFeet}
+              onChange={(e) => setHeightFeet(e.target.value)}
+              className="w-full p-3 border border-gray-300 rounded-lg focus:border-primary focus:outline-none"
+              required
+              min="3"
+              max="8"
+            />
           </div>
           <div>
-            <label className="block font-semibold">Gender</label>
-            <select value={gender} onChange={(e) => setGender(e.target.value)} className="w-full p-2 border rounded" required>
-              <option value="">Select</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
+            <label className="block font-medium text-gray-700">Height (Inches)</label>
+            <input
+              type="number"
+              value={heightInches}
+              onChange={(e) => setHeightInches(e.target.value)}
+              className="w-full p-3 border border-gray-300 rounded-lg focus:border-primary focus:outline-none"
+              required
+              min="0"
+              max="11"
+            />
+          </div>
+        </div>
+
+        {/* Weight Input */}
+        <div>
+          <label className="block font-medium text-gray-700">Weight</label>
+          <div className="flex items-center gap-4">
+            <input
+              type="number"
+              value={weight}
+              onChange={(e) => setWeight(e.target.value)}
+              className="w-full p-3 border border-gray-300 rounded-lg focus:border-primary focus:outline-none"
+              required
+              min="40"
+              max="700"
+            />
+            <select
+              value={weightUnit}
+              onChange={(e) => setWeightUnit(e.target.value)}
+              className="p-3 border border-gray-300 rounded-lg focus:border-primary focus:outline-none"
+            >
+              <option value="kg">kg</option>
+              <option value="lbs">lbs</option>
             </select>
           </div>
-          <div className="flex gap-2">
-            <div>
-              <label className="block font-semibold">Height (Feet)</label>
-              <input
-                type="number"
-                value={heightFeet}
-                onChange={(e) => setHeightFeet(e.target.value)}
-                className="w-full p-2 border rounded"
-                required
-                min="3"
-                max="8"
-              />
-            </div>
-            <div>
-              <label className="block font-semibold">Height (Inches)</label>
-              <input type="number" value={heightInches} onChange={(e) => setHeightInches(e.target.value)} className="w-full p-2 border rounded" required min="0" max="12"/>
-            </div>
-          </div>
-          <div>
-            <label className="block font-semibold">Weight</label>
-            <div className="flex items-center gap-2">
-              <input
-                type="number"
-                value={weight}
-                onChange={(e) => setWeight(e.target.value)}
-                className="w-full p-2 border rounded"
-                required
-                min={weightUnit === 'lbs' ? "50" : "22.68"}
-                max={weightUnit === 'lbs' ? "1400" : "635.03"}
-              />
-              <select value={weightUnit} onChange={(e) => setWeightUnit(e.target.value)} className="p-2 border rounded">
-                <option value="kg">kg</option>
-                <option value="lbs">lbs</option>
-              </select>
-            </div>
-          </div>
-          <div>
-            <label className="block font-semibold">Activity Level</label>
-            <select value={activityLevel} onChange={(e) => setActivityLevel(e.target.value)} className="w-full p-2 border rounded" required>
-              <option value="">Select</option>
-              <option value="Sedentary">Sedentary</option>
-              <option value="Lightly active">Lightly active</option>
-              <option value="Moderately active">Moderately active</option>
-              <option value="Highly active">Highly active</option>
-            </select>
-          </div>
-          <div>
-            <label className="block font-semibold">Goal</label>
-            <select value={goal} onChange={(e) => setGoal(e.target.value)} className="w-full p-2 border rounded">
-              <option value="">Select Goal</option>
-              <option value="Extreme weight loss">Extreme weight loss</option>
-              <option value="Weight loss">Weight loss</option>
-              <option value="Maintain weight">Maintain weight</option>
-              <option value="Weight gain">Weight gain</option>
-              <option value="Extreme weight gain">Extreme weight gain</option>
-            </select>
-          </div>
-          <button type="submit" className="w-full p-2 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600">Calculate</button>
-        </form>
-      ) : (
-        <div className="bg-gray-100 p-6 rounded-lg shadow-md text-center">
-          <h3 className="text-lg font-bold mb-4">Your Daily Recommendations</h3>
-          <div className="flex justify-center mb-4 space-x-2">
-            {['Balanced', 'Low Fat', 'Low Carb', 'High Protein', 'Custom'].map((plan) => (
-              <button
-                key={plan}
-                onClick={() => handlePlanChange(plan)}
-                className={`px-3 py-1 rounded ${selectedPlan === plan ? 'bg-gray-700 text-white' : 'bg-blue-500 text-white'}`}
-              >
-                {plan}
-              </button>
-            ))}
-          </div>
+        </div>
+
+        {/* Activity Level Input */}
+        <div>
+          <label className="block font-medium text-gray-700">Activity Level</label>
+          <select
+            value={activityLevel}
+            onChange={(e) => setActivityLevel(e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:border-primary focus:outline-none"
+            required
+          >
+            <option value="">Select</option>
+            <option value="Sedentary">Sedentary</option>
+            <option value="Lightly active">Lightly active</option>
+            <option value="Moderately active">Moderately active</option>
+            <option value="Highly active">Highly active</option>
+          </select>
+        </div>
+
+        {/* Goal Input */}
+        <div>
+          <label className="block font-medium text-gray-700">Goal</label>
+          <select
+            value={goal}
+            onChange={(e) => setGoal(e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:border-primary focus:outline-none"
+          >
+            <option value="">Select Goal</option>
+            <option value="Extreme weight loss">Extreme weight loss</option>
+            <option value="Weight loss">Weight loss</option>
+            <option value="Maintain weight">Maintain weight</option>
+            <option value="Weight gain">Weight gain</option>
+            <option value="Extreme weight gain">Extreme weight gain</option>
+          </select>
+        </div>
+
+        <button
+          type="submit"
+          className="w-full py-3 bg-primary text-white font-semibold rounded-lg transition hover:bg-secondary"
+        >
+          Calculate
+        </button>
+      </form>
+    ) : (
+      <div className="bg-gray-50 p-8 rounded-xl shadow-md text-center space-y-6">
+        <h3 className="text-lg font-bold text-gray-800">Your Daily Recommendations</h3>
+
+        {/* Plan Selection Buttons */}
+        <div className="flex flex-wrap justify-center gap-4 mb-6">
+          {['Balanced', 'Low Fat', 'Low Carb', 'High Protein', 'Custom'].map((plan) => (
+            <button
+              key={plan}
+              onClick={() => handlePlanChange(plan)}
+              className={`min-w-[80px] px-4 py-2 rounded-full font-semibold transition ${
+                selectedPlan === plan
+                  ? 'bg-primary text-white shadow'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              {plan}
+            </button>
+          ))}
+        </div>
+
+        {/* Calorie and Macronutrient Info */}
+        <div className="text-xl font-medium text-gray-800 space-y-1">
           <p><span className="font-semibold">Calories:</span> {calories} kcal</p>
           <p><span className="font-semibold">Protein:</span> {macros.protein} grams</p>
           <p><span className="font-semibold">Carbs:</span> {macros.carbs} grams</p>
           <p><span className="font-semibold">Fat:</span> {macros.fat} grams</p>
+        </div>
 
-          {selectedPlan === 'Custom' && (
-            <div className="mt-6 text-left">
-              <h4 className="font-bold mb-2">Adjust Macronutrients</h4>
+        {/* Custom Plan Sliders */}
+        {selectedPlan === 'Custom' && (
+          <div className="mt-6 space-y-4">
+            <h4 className="font-bold text-gray-800">Adjust Macronutrients</h4>
+            <div>
               <label>Protein ({customMacros.protein}%)</label>
               <input
                 type="range"
@@ -270,8 +338,10 @@ const CalorieCalculator = () => {
                 max="80"
                 value={customMacros.protein}
                 onChange={(e) => handleSliderChange('protein', parseInt(e.target.value))}
-                className="w-full mb-2"
+                className="w-full accent-primary"
               />
+            </div>
+            <div>
               <label>Carbs ({customMacros.carbs}%)</label>
               <input
                 type="range"
@@ -279,8 +349,10 @@ const CalorieCalculator = () => {
                 max="80"
                 value={customMacros.carbs}
                 onChange={(e) => handleSliderChange('carbs', parseInt(e.target.value))}
-                className="w-full mb-2"
+                className="w-full accent-primary"
               />
+            </div>
+            <div>
               <label>Fat ({customMacros.fat}%)</label>
               <input
                 type="range"
@@ -288,21 +360,32 @@ const CalorieCalculator = () => {
                 max="80"
                 value={customMacros.fat}
                 onChange={(e) => handleSliderChange('fat', parseInt(e.target.value))}
-                className="w-full mb-2"
+                className="w-full accent-primary"
               />
             </div>
-          )}
+          </div>
+        )}
 
-          <button onClick={saveUserMacros} className="mt-4 w-full p-2 bg-green-500 text-white font-semibold rounded hover:bg-green-600">
+        {/* Save and Recalculate Buttons */}
+        <div className="space-y-4 mt-8">
+          <button
+            onClick={saveUserMacros}
+            className="w-full py-3 bg-primary text-white font-semibold rounded-lg transition hover:bg-secondary"
+          >
             Save Macros
           </button>
-          <button onClick={() => setShowResults(false)} className="mt-2 w-full p-2 bg-gray-500 text-white font-semibold rounded hover:bg-gray-600">
+          <button
+            onClick={() => setShowResults(false)}
+            className="w-full py-3 bg-gray-200 text-white font-semibold rounded-lg transition hover:bg-slate-300"
+          >
             Recalculate Macros
           </button>
         </div>
-      )}
-    </div>
+      </div>
+    )}
+  </div>
   );
 };
+
 
 export default CalorieCalculator;
