@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "http://MrJio.github.io/FitJoy",
+  "homepage": "https://MrJio.github.io/FitJoy",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
