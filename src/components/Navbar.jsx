@@ -78,7 +78,7 @@ const Navbar = () => {
                     </div>
                     {isNutritionOpen && (
                         <ul className='md:absolute md:left-0 md:top-full bg-white shadow-lg rounded-xl mt-2 md:mt-0 md:bg-white flex flex-col space-y-2 ml-4 p-2 md:ml-0'>
-                            <NavLink to='/food-logger' className={({ isActive }) => (isActive ? 'active' : '')} onClick={handleLinkClick}>
+                            <NavLink to='/FoodLogger' className={({ isActive }) => (isActive ? 'active' : '')} onClick={handleLinkClick}>
                                 <li className='py-2 px-2 hover:bg-gray-200 rounded-xl text-center md:text-left'>Food Logger</li>
                             </NavLink>
                             <NavLink to='/recipes' className={({ isActive }) => (isActive ? 'active' : '')} onClick={handleLinkClick}>
@@ -96,7 +96,7 @@ const Navbar = () => {
                     </div>
                     {isFitnessOpen && (
                         <ul className='md:absolute md:right-0 md:top-full bg-white shadow-lg rounded-xl mt-2 md:mt-0 md:bg-white flex flex-col space-y-2 ml-4 p-2 md:ml-0'>
-                            <NavLink to='/calorie-calculator' className={({ isActive }) => (isActive ? 'active' : '')} onClick={handleLinkClick}>
+                            <NavLink to='/CalorieCalculator' className={({ isActive }) => (isActive ? 'active' : '')} onClick={handleLinkClick}>
                                 <li className='py-2 px-2 hover:bg-gray-200 rounded-xl text-center md:text-left'>Calorie Calculator</li>
                             </NavLink>
                             <NavLink to='/workouts' className={({ isActive }) => (isActive ? 'active' : '')} onClick={handleLinkClick}>

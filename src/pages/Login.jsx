@@ -1,9 +1,11 @@
+// Login.jsx
 // eslint-disable-next-line no-unused-vars
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
-import { auth } from '../firebase';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { auth, db } from '../firebase';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
+import { setDoc, doc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
@@ -12,42 +14,65 @@ const Login = () => {
   const [loginPass, setLoginP] = useState('');
   const [registerEmail, setRegisterE] = useState('');
   const [registerPass, setRegisterP] = useState('');
-  const [isSignUp, setIsSignUp] = useState(false); // State to manage sign in/sign up view
-  const [showPasswordSignIn, setShowPasswordSignIn] = useState(false); // State to manage password visibility for sign in form
-  const [showPasswordSignUp, setShowPasswordSignUp] = useState(false); // State to manage password visibility for sign up form
+  const [isSignUp, setIsSignUp] = useState(false);
+  const [showPasswordSignIn, setShowPasswordSignIn] = useState(false);
+  const [showPasswordSignUp, setShowPasswordSignUp] = useState(false);
 
-  const toggleSignUp = () => {
-    setIsSignUp(!isSignUp); // Switches state for signIn and SignUp overlay
-  };
-
-  const logIn = (e) => {
-    e.preventDefault();
-    signInWithEmailAndPassword(auth, loginEmail, loginPass)
-    .then((userCredential) =>{
-      console.log(userCredential);
-      navigate('/home');
-    }).catch((error) =>{
-      console.log(error);
-    })
-  }
-  
-const signUp = (e) => {
-  e.preventDefault();
-  createUserWithEmailAndPassword(auth, registerEmail, registerPass)
-    .then((userCredential) => {
-      console.log(userCredential);
-      navigate('/home');
-    })
-    .catch((error) => {
-      if (error.code === 'auth/email-already-in-use') {
-        console.log('Email already in use');
-        alert('This email is already registered. Please try logging in.');
-      } else {
-        console.log(error.message);
-        alert('Error signing up: ' + error.message);
+  // Listen for auth state changes
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is logged in, navigate to home
+        navigate('/home');
       }
     });
-};
+    return () => unsubscribe();
+  }, [navigate]);
+
+  const toggleSignUp = () => {
+    setIsSignUp(!isSignUp);
+  };
+
+  const logIn = async (e) => {
+    e.preventDefault();
+    try {
+      await signInWithEmailAndPassword(auth, loginEmail, loginPass);
+    } catch (error) {
+      console.log(error);
+      alert('Error logging in: ' + error.message);
+    }
+  };
+
+  const signUp = async (e) => {
+    e.preventDefault();
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, registerEmail, registerPass);
+      const user = userCredential.user;
+
+      // Save user data to Firestore
+      await setDoc(doc(db, "users", user.uid), {
+        email: user.email,
+        createdAt: new Date(),
+        macros: {
+          protein: 0, // Placeholder values, adjust as needed
+          carbs: 0,
+          fat: 0,
+          calories: 0,
+        },
+        selectedPlan: "Balanced"
+      });
+      console.log("User data saved to Firestore");
+
+      // No need to navigate here; onAuthStateChanged will handle it
+    } catch (error) {
+      if (error.code === 'auth/email-already-in-use') {
+        alert('This email is already registered. Please try logging in.');
+      } else {
+        console.error("Error signing up:", error.message);
+        alert('Error signing up: ' + error.message);
+      }
+    }
+  };
 
   return (
     <div className="relative w-full h-screen flex justify-center items-center mx-0">
@@ -79,17 +104,16 @@ const signUp = (e) => {
               <button
                 type="button"
                 onClick={() => setShowPasswordSignIn(!showPasswordSignIn)}
-                className="absolute right-3 mt-3 text-gray-100 hover:text-gray-300"
+                className="absolute right-3 mt-3 text-gray-500 hover:text-gray-700"
               >
                 <FontAwesomeIcon icon={showPasswordSignIn ? faEye : faEyeSlash} />
               </button>
             </div>
-            <a href="#" className="text-sm text-gray-500 mb-4 block text-center hover:text-gray-400">Forgot your password?</a>
             <button type="submit" className="w-3/6 bg-primary hover:bg-secondary text-white py-2 rounded-3xl mx-auto">Sign In</button>
           </form>
           <p className="text-center mt-4">
             Don’t have an account?{' '}
-            <a onClick={toggleSignUp} className="text-primary cursor-pointer hover:underline">Register now</a>
+            <span onClick={toggleSignUp} className="text-primary cursor-pointer hover:underline">Register now</span>
           </p>
         </div>
 
@@ -119,7 +143,7 @@ const signUp = (e) => {
               <button
                 type="button"
                 onClick={() => setShowPasswordSignUp(!showPasswordSignUp)}
-                className="absolute right-3 mt-3 text-gray-100 hover:text-gray-300"
+                className="absolute right-3 mt-3 text-gray-500 hover:text-gray-700"
               >
                 <FontAwesomeIcon icon={showPasswordSignUp ? faEye : faEyeSlash} />
               </button>
@@ -128,7 +152,7 @@ const signUp = (e) => {
           </form>
           <p className="text-center mt-4">
             Already registered?{' '}
-            <a onClick={toggleSignUp} className="text-primary cursor-pointer hover:underline">Login</a>
+            <span onClick={toggleSignUp} className="text-primary cursor-pointer hover:underline">Login</span>
           </p>
         </div>
 
@@ -138,13 +162,13 @@ const signUp = (e) => {
             <>
               <h1 className="text-3xl font-bold mb-4">Welcome Back!</h1>
               <p className="mb-6">To keep connected with us please login with your personal info</p>
-              <button onClick={toggleSignUp} className="w-3/6 bg-transparent border border-white py-2 px-4 rounded-full text-white hover:bg-white hover:text-secondary transition">Sign Up</button>
+              <button onClick={toggleSignUp} className="w-3/6 bg-transparent border border-white py-2 px-4 rounded-full text-white hover:bg-white hover:text-secondary transition">Sign In</button>
             </>
           ) : (
             <>
               <h1 className="text-3xl font-bold mb-4">Welcome To FITJOY</h1>
               <p className="mb-6">Enter your personal details and start your journey with us</p>
-              <button onClick={toggleSignUp} className="w-3/6 bg-transparent border border-white py-2 px-4 rounded-full text-white hover:bg-white hover:text-secondary transition">Sign In</button>
+              <button onClick={toggleSignUp} className="w-3/6 bg-transparent border border-white py-2 px-4 rounded-full text-white hover:bg-white hover:text-secondary transition">Sign Up</button>
             </>
           )}
         </div>
